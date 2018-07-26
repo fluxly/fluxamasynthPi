@@ -1,11 +1,14 @@
 import serial
 port = "/dev/ttyS0"
+serialPort = serial.Serial()
 
 def setPort(p):
     port = p
     
 def init():
-    serialPort = serial.Serial(port, 31250)
+    serialPort.baudrate = 31250
+    serialPort.port = port
+    serialPort.open()
     serialPort.flushInput
 
 def noteOn(channel, pitch, velocity):
