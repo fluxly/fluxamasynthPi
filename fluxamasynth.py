@@ -25,8 +25,9 @@ def programChange(bank, channel, v):
 
 def pitchBend(channel, v): 
     # v is a value from 0 to 1023
-    # it is mapped to the full range 0 to 0x3fff
+    # it is mapped to the full range 0 to 0x3fff (16383)
     #v = map(v, 0, 1023, 0, 0x3fff);
+    v = v * (16383 - 1023) / (1023);
     packet = [  0xe0 | (channel & 0x0f), byte(v & 0x00ef), byte(v >> 7)];
     serialPort.write(bytearray(packet))
 
@@ -36,28 +37,22 @@ def pitchBendRange(channel, v):
     packet = [ 0xb0 | (channel & 0x0f), 0x65, 0x00, 0x64, 0x00, 0x06, (v & 0x7f)];
     serialPort.write(bytearray(packet))
 
-
 def midiReset(): 
     serialPort.write(bytearray(0xff))
-
 
 def setChannelVolume(channel, level): 
     packet = [  (0xb0 | (channel & 0x0f)), 0x07, level];
     serialPort.write(bytearray(packet))
-
 
 def allNotesOff(channel): 
     # BnH 7BH 00H
     packet = [  (0xb0 | (channel & 0x0f)), 0x7b, 0x00];
     serialPort.write(bytearray(packet))
 
-
 def setMasterVolume(level): 
     #F0H 7FH 7FH 04H 01H 00H ll F7H
     packet = [  0xf0, 0x7f, 0x7f, 0x04, 0x01, 0x00, (level & 0x7f), 0xf7];
     serialPort.write(bytearray(packet))
-
-
 
 def setReverb(channel, program, level, delayFeedback): 
     # Program 
@@ -78,8 +73,6 @@ def setReverb(channel, program, level, delayFeedback):
       packet = [  0xf0, 0x41, byte(0x00), 0x42, 0x12, 0x40, 0x01, 0x35, (delayFeedback & 0x7f), 0x00, 0xf7];
       serialPort.write(bytearray(packet))
     
-
-
 def setChorus(channel, program, level, feedback, chorusDelay): 
     # Program 
     # 0: Chorus1   1: Chorus2    2: Chorus3 
@@ -104,8 +97,6 @@ def setChorus(channel, program, level, feedback, chorusDelay):
         # F0H 41H 00H 42H 12H 40H 01H 3CH vv xx F7H
         packet = [  0xf0, 0x41, byte(0x00), 0x42, 0x12, 0x40, 0x01, 0x3C, (chorusDelay & 0x7f), 0x00, 0xf7];
 	serialPort.write(bytearray(packet))
-    
-
 
 def pan(channel, value): 
     packet = [ (0xb0 | (channel & 0x0f)), 0x0A, (value)  ];
@@ -144,7 +135,6 @@ def setEQ(channel, lowBand, medLowBand, medHighBand, highBand,
     packet[6] = (highFreq & 0x7f)
     serialPort.write(bytearray(packet))
 
-
 def setTuning(channel, coarse, fine): 
     # This will turn off any note playing on the channel
     #BnH 65H 00H 64H 01H 06H vv  Fine
@@ -154,7 +144,6 @@ def setTuning(channel, coarse, fine):
     packet[4] = 0x02
     packet[6] = (coarse & 0x7f)
     serialPort.write(bytearray(packet))
-
 
 def setVibrate(channel, rate, depth, mod): 
     #BnH 63H 01H 62H 08H 06H vv  Rate
@@ -169,7 +158,6 @@ def setVibrate(channel, rate, depth, mod):
     packet[6] = (mod & 0x7f)
     serialPort.write(bytearray(packet))
 
-
 def setTVF(channel, cutoff, resonance): 
     #BnH 63H 01H 62H 20H 06H vv  Cutoff
     #BnH 63H 01H 62H 21H 06H vv  Resonance
@@ -178,7 +166,6 @@ def setTVF(channel, cutoff, resonance):
     packet[4] = 0x21;
     packet[6] = (resonance & 0x7f)
     serialPort.write(bytearray(packet))
-
 
 def setEnvelope(channel, attack, decay, release): 
     #BnH 63H 01H 62H 63H 06H vv
@@ -193,14 +180,12 @@ def setEnvelope(channel, attack, decay, release):
     packet[6] = (release & 0x7f);
     serialPort.write(bytearray(packet))
 
-
 def setScaleTuning(channel, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12): 
     #F0h 41h 00h 42h 12h 40h 1nh 40h v1 v2 v3 ... v12 F7h
     # values are in range 00h = -64 cents to 7fh = +64 cents, center is 40h
     packet = [  0xf0, 0x41, 0x00, 0x42, 0x12, 0x40, 0x10 | (channel & 0x0f), 0x40,
         v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, 0xf7];
     serialPort.write(bytearray(packet))
-
 
 def allDrums(): 
     #F0h 41h 00h 42h 12h 40h 1ph 15h vv xx F7h
@@ -209,8 +194,5 @@ def allDrums():
     for i in range (1, 15): 
         packet[6] = i;
         serialPort.write(bytearray(packet))
-     
-
-
 
 
