@@ -1,8 +1,12 @@
 import serial
-
 port = "/dev/ttyS0"
-serialPort = serial.Serial(port, 31250)
-serialPort.flushInput
+
+def setPort(p):
+    port = p
+    
+def init():
+    serialPort = serial.Serial(port, 31250)
+    serialPort.flushInput
 
 def noteOn(channel, pitch, velocity):
     packet = [ 0x90 | (channel & 0x0f), pitch, velocity];
