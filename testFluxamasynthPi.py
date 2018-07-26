@@ -1,4 +1,4 @@
-import fluxamasynthPi
+import fluxamasynth
 from time import sleep
 
 while (1): 

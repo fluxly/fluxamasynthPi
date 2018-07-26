@@ -4,14 +4,14 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="example_pkg",
-    version="0.0.1",
-    author="Example Author",
-    author_email="author@example.com",
-    description="A small example package",
+    name="fluxamasynth",
+    version="1.0",
+    author="Modern Device",
+    author_email="shawn@as220.org",
+    description="A library for the Modern Device Fluxamasynth board.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/fluxly/fluxamasynthPi",
     packages=setuptools.find_packages(),
     classifiers=(
         "Programming Language :: Python :: 3",
